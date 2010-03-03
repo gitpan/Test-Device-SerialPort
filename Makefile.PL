@@ -1,12 +1,23 @@
-use 5.006001;
+use strict;
+use warnings;
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+
 WriteMakefile(
+    AUTHOR            => 'Cosimo Streppone <cosimo@cpan.org>',
     NAME              => 'Test::Device::SerialPort',
-    VERSION_FROM      => 'lib/Test/Device/SerialPort.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-    ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/Test/Device/SerialPort.pm', # retrieve abstract from module
-       AUTHOR         => 'Cosimo Streppone <cosimo@cpan.org>') : ()),
+    LICENSE           => 'perl',
+    ABSTRACT_FROM     => 'lib/Test/Device/SerialPort.pm',
+    VERSION_FROM      => 'lib/Test/Device/SerialPort.pm',
+    PREREQ_PM         => {
+		'Test::More' => 0,
+	},
+    META_MERGE => {
+        resources => {
+            repository => 'git://github.com/cosimo/perl5-test-device-serialport.git',
+            bugtracker => 'mailto:bug-test-device-serialport@rt.cpan.org',
+            license    => 'http://dev.perl.org/licenses/',
+        },
+    },
+    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
+    clean               => { FILES => 'Test-Device-SerialPort-*' },
 );

@@ -1,8 +1,7 @@
-# $Id: $
-
 package Test::Device::SerialPort;
+
 use strict;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new
 {
@@ -317,7 +316,7 @@ Cosimo Streppone, <cosimo@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2007 by Cosimo Streppone
+Copyright (C) 2007-2010 by Cosimo Streppone
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.8 or,
