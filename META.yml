@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Test-Device-SerialPort
-version:            0.02
+version:            0.03
 abstract:           Serial port mock object to be used for testing
 author:
     - Cosimo Streppone <cosimo@cpan.org>
