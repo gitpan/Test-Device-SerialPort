@@ -19,7 +19,7 @@ use warnings;
 
 require Exporter;
 
-our $VERSION = '0.05';
+our $VERSION = '0.0501';
 our @ISA = qw(Exporter);
 our @EXPORT= qw();
 our @EXPORT_OK= qw();
@@ -227,6 +227,8 @@ sub new
 	_debug => 0,			# for test suite only
 	_fake_status => 0,		# for test suite only
 	_fake_input => chr(0xa5),	# X10 CM11 wakeup
+    _mock_port => 0,
+    _mock_messages => '',
 	_rx_bufsize => 4096,		# Win32 compatibility
 	_tx_bufsize => 4096,
 	_LOOK => "",			# for lookfor and streamline
@@ -928,7 +930,19 @@ sub _random_wait
     return();
 }
 
-# Read data from line. For us is "generate" some random
+sub mock_port {
+    my ($self, $mock) = @_;
+    $self->{_mock_port} = yes_true($mock) if defined $mock;
+    return $self->{_mock_port};
+}
+
+sub mock_messages {
+    my ($self, @messages) = @_;
+    $self->{_mock_messages} .= join '', @messages;
+    return length $self->{_mock_messages};
+}
+
+# Read data from line. For us is "generate" some
 # data as it came from the serial line.
 sub read
 {
@@ -945,6 +959,13 @@ sub read
 	    warn "Test Suite input length mismatch: requested: $bytes\n\tgot: $size, data: $self->{_fake_input}\n";
 	}
 	return($size, $buf);
+    }
+
+    # Return data from mocked port
+    if ($self->{_mock_port}) {
+        $self->{_rx_buf} = '';
+        my $buf = substr $self->{_mock_messages}, 0, $bytes, '';
+        return length($buf), $buf;
     }
 
     # Wait some random time
@@ -1150,6 +1171,22 @@ Test::Device::SerialPort - Serial port mock object to be used for testing
 Nothing more.
 It's a test object that mimics the real Device::SerialPort thing.
 Used mainly for testing when I don't have an actual device to test.
+
+=head1 FAKING INPUT FROM THE SERIAL PORT
+
+If you need to test the interface with an external device, you can
+mock its input by using the following interface:
+
+ my $port = Test::Device::SerialPort->new;
+
+ $port->mock_port(1);
+ $port->mock_messages('abc', 'def');
+
+The list of scalars given to C<mock_messages> will be retrieved by
+the C<read> method:
+
+ $input = $port->read(1);  # Retrieves 'a'
+ $input = $port->read(3);  # Retrieves 'bcd'
 
 =head1 STATUS
 
